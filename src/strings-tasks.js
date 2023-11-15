@@ -40,8 +40,8 @@ function getStringLength(value) {
  *   isString('test') => true
  *   isString(new String('test')) => true
  */
-function isString(/* value */) {
-  throw new Error('Not implemented');
+function isString(value) {
+  return typeof value === 'string' || value instanceof String;
 }
 
 /**
@@ -173,9 +173,9 @@ function removeFirstOccurrences(str, value) {
  *   removeLastOccurrences('ABABAB', 'BA') => 'ABAB'.
  */
 function removeLastOccurrences(str, value) {
-  const result = str.lastIndexOf(value, 0);
-  if (str.includes(value)) {
-    return str.slice(0, result - value.length);
+  const pos = str.lastIndexOf(value);
+  if (pos !== -1) {
+    return str.slice(0, pos) + str.slice(pos + value.length);
   }
   return str;
 }
@@ -192,8 +192,15 @@ function removeLastOccurrences(str, value) {
  *   sumOfCodes('') => 0
  *   sumOfCodes() => 0
  */
-function sumOfCodes(/* str */) {
-  throw new Error('Not implemented');
+function sumOfCodes(str) {
+  if (str) {
+    let sum = 0;
+    for (let j = 0; j < str.length; j += 1) {
+      sum += str.charCodeAt(j);
+    }
+    return sum;
+  }
+  return 0;
 }
 
 /**
@@ -304,8 +311,9 @@ function containsSubstring(str, substring) {
  *   countVowels('aEiOu') => 5
  *   countVowels('XYZ') => 1
  */
-function countVowels(/* str */) {
-  throw new Error('Not implemented');
+function countVowels(str) {
+  const match = str.match(/[AaEeIiOoUuYy]/gi);
+  return match === null ? 0 : match.length;
 }
 
 /**
@@ -321,8 +329,14 @@ function countVowels(/* str */) {
  *   isPalindrome('apple') => false
  *   isPalindrome('No lemon, no melon') => true
  */
-function isPalindrome(/* str */) {
-  throw new Error('Not implemented');
+function isPalindrome(str) {
+  const replacedStr = str.toLowerCase().replaceAll(/[^a-z]+/g, '');
+  for (let i = 0; i < replacedStr.length / 2; i += 1) {
+    if (replacedStr[i] !== replacedStr[replacedStr.length - 1 - i]) {
+      return false;
+    }
+  }
+  return true;
 }
 
 /**
@@ -337,8 +351,15 @@ function isPalindrome(/* str */) {
  *   findLongestWord('A long and winding road') => 'winding'
  *   findLongestWord('No words here') => 'words'
  */
-function findLongestWord(/* sentence */) {
-  throw new Error('Not implemented');
+function findLongestWord(sentence) {
+  const words = sentence.split(' ');
+  let word = words[0];
+  for (let i = 1; i < words.length; i += 1) {
+    if (words[i].length > word.length) {
+      word = words[i];
+    }
+  }
+  return word;
 }
 
 /**
@@ -424,8 +445,9 @@ function extractNameFromTemplate(value) {
  *   unbracketTag('<span>') => 'span'
  *   unbracketTag('<a>') => 'a'
  */
-function unbracketTag(/* str */) {
-  throw new Error('Not implemented');
+function unbracketTag(str) {
+  const newStr = str.substring(1, str.length - 1);
+  return newStr;
 }
 
 /**
@@ -463,8 +485,19 @@ function extractEmails(str) {
  *    => 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm'
  *
  */
-function encodeToRot13(/* str */) {
-  throw new Error('Not implemented');
+function encodeToRot13(str) {
+  const alphabet =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz';
+  let result = '';
+  for (let i = 0; i < str.length; i += 1) {
+    if (alphabet.indexOf(str[i]) === -1) {
+      result += str[i];
+    } else {
+      result += str[i].replace(str[i], alphabet[alphabet.indexOf(str[i]) + 13]);
+    }
+  }
+
+  return result;
 }
 
 /**
